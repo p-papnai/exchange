@@ -12,7 +12,7 @@ let cachedData = null; // To store the fetched data in memory
 cron.schedule('0 17 * * *', async () => {
   console.log('Running cron job to fetch data...');
   try {
-    const data = await fetchData();;
+    const data = await fetchData();
     cachedData = data; // Update cached data
     // Optionally, you can save the data to a database or use any other storage mechanism
   } catch (error) {
@@ -24,14 +24,32 @@ cron.schedule('0 17 * * *', async () => {
 app.get('/currencyData', async (req, res) => {
   try {
     // If cachedData is null (first time or after server restart), fetch fresh data
-    if (!cachedData) {
-      console.log("again calling");
-      cachedData = await fetchData();
-    }
-    res.json(cachedData);
+    const dataFilePath = '/tmp/currencyData.json'; // Path to store the cached data
+await fs.access(dataFilePath);
+    
+    // File exists, read the data from the file
+    const fileContent = await fs.readFile(dataFilePath, 'utf8');
+    const data = JSON.parse(fileContent);
+    
+    console.log('Data loaded from file cache:', data);
+
+
+    
+  
+    res.json(data);
   } catch (error) {
+     if (error.code === 'ENOENT') {
+      console.log('Cached data file does not exist yet.');
+      const d = await fetchData();
+    cachedData = d; // Update cached data
+          const data = JSON.parse(cachedData);
+
+         res.json(data);
+    } 
+    else{
     console.error('Error fetching data:', error.message);
     res.status(500).json({ error: 'Failed to retrieve data' });
+    }
   }
 });
 
