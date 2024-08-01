@@ -12,7 +12,7 @@ let cachedData = null; // To store the fetched data in memory
 cron.schedule('0 17 * * *', async () => {
   console.log('Running cron job to fetch data...');
   try {
-    const data = "hi";
+    const data = await fetchData();;
     cachedData = data; // Update cached data
     // Optionally, you can save the data to a database or use any other storage mechanism
   } catch (error) {
@@ -25,6 +25,7 @@ app.get('/currencyData', async (req, res) => {
   try {
     // If cachedData is null (first time or after server restart), fetch fresh data
     if (!cachedData) {
+      console.log("again calling");
       cachedData = await fetchData();
     }
     res.json(cachedData);
