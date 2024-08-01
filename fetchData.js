@@ -9,7 +9,7 @@ async function fetchData() {
     const data = response.data;
     
     // Save data to a local file (or database, as per your requirement)
-    await fs.writeFile('currencyData.json', JSON.stringify(data, null, 2));
+    await fs.writeFile('/tmp/currencyData.json', JSON.stringify(data, null, 2));
     
     console.log('Data fetched and saved successfully:', data);
     return data;
