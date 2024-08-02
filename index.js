@@ -29,7 +29,7 @@ await fs.access(dataFilePath);
     
     // File exists, read the data from the file
     const fileContent = await fs.readFile(dataFilePath, 'utf8');
-    const data = JSON.parse(fileContent);
+    const data = fileContent;
     
     console.log('Data loaded from file cache:', data);
 
