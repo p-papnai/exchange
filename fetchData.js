@@ -2,10 +2,21 @@
 
 const axios = require('axios');
 const fs = require('fs').promises;
+require('dotenv').config();
+
 
 async function fetchData() {
   try {
-    const response = await axios.get("https://v6.exchangerate-api.com/v6/4d9567d4b96a9de02b1b0316/latest/INR");
+
+     const apiKey = process.env.KEY; // Get the API key from environment variables
+
+  if (!apiKey) {
+    console.error('API_KEY is not defined in the environment variables');
+    return;
+  }
+
+    
+    const response = await axios.get("https://v6.exchangerate-api.com/v6/${apiKey}/latest/INR");
     const data = response.data;
     
     // Save data to a local file (or database, as per your requirement)
